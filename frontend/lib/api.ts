@@ -1,13 +1,15 @@
 import type { Restaurant, Category, MenuItem, Offer, Order, DashboardStats, CartItem } from "@/types";
 import offersData from "@/data/offers.json";
 
-// Dynamic API host resolver to support mobile connections on local networks
+// Dynamic API host resolver supporting relative routing in production / local proxy
 const getApiBaseUrl = () => {
+  if (typeof window !== "undefined") {
+    // Relative path routed by Vercel rewrites or Next.js dev proxy
+    return "/api/backend";
+  }
+  // Server-side fallback (requires absolute host paths during SSR)
   if (process.env.NEXT_PUBLIC_API_URL) {
     return process.env.NEXT_PUBLIC_API_URL;
-  }
-  if (typeof window !== "undefined") {
-    return `http://${window.location.hostname}:8000`;
   }
   return "http://127.0.0.1:8000";
 };
