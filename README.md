@@ -104,3 +104,20 @@ qr-menu/
 The frontend incorporates a **Dynamic API Host Resolver** inside `frontend/lib/api.ts`. When you open the application on your phone connected to the same local WiFi (e.g. `http://192.168.1.15:3000/?table=5`):
 * The browser automatically resolves the API base URL to `http://192.168.1.15:8000`.
 * This lets you place orders, process mock payments, and print QR signs directly from physical mobile devices without hardcoding IP addresses.
+
+---
+
+## 🚀 Deploying to Vercel (Frontend)
+
+To deploy the Next.js client on Vercel:
+
+1. Go to the [Vercel Dashboard](https://vercel.com) and click **Add New** -> **Project**.
+2. Select your imported GitHub repository **digiQR-menu/QR-menu**.
+3. In the **Configure Project** settings, specify the following:
+   * **Framework Preset**: Select `Next.js`.
+   * **Root Directory**: Click **Edit** and select the `frontend` folder (since the Next.js project is nested inside a monorepo).
+   * **Build & Development Settings**: Keep default settings.
+4. Under **Environment Variables**, configure:
+   * **Key**: `NEXT_PUBLIC_API_URL`
+   * **Value**: *Your deployed FastAPI production backend URL* (e.g. `https://qr-menu-api.onrender.com`).
+5. Click **Deploy**. Vercel will compile the frontend and output a public URL!
