@@ -41,10 +41,15 @@ def seed_db(db: Session):
     db.add_all(tables)
     db.commit()
 
-    # Load categories from frontend JSON file
-    frontend_dir = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))), "frontend")
-    categories_path = os.path.join(frontend_dir, "data", "categories.json")
-    menu_path = os.path.join(frontend_dir, "data", "menu.json")
+    # Load categories from local backend data folder or fallback to frontend path
+    backend_data_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), "data")
+    categories_path = os.path.join(backend_data_dir, "categories.json")
+    menu_path = os.path.join(backend_data_dir, "menu.json")
+
+    if not os.path.exists(categories_path):
+        frontend_dir = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))), "frontend")
+        categories_path = os.path.join(frontend_dir, "data", "categories.json")
+        menu_path = os.path.join(frontend_dir, "data", "menu.json")
 
     print(f"Reading categories from {categories_path}...")
     with open(categories_path, "r", encoding="utf-8") as f:

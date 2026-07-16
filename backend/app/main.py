@@ -11,8 +11,25 @@ import app.models  # noqa: F401
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    """Create database tables on startup."""
+    """Create database tables and auto-seed if empty on startup."""
     Base.metadata.create_all(bind=engine)
+    
+    # Auto-seed if database is empty (e.g. on new serverless function launches)
+    from app.database import SessionLocal
+    from app.models import MenuItem
+    from app.seed import seed_db
+    
+    db = SessionLocal()
+    try:
+        if db.query(MenuItem).count() == 0:
+            print("Database is empty. Running auto-seeding...")
+            seed_db(db)
+            print("Auto-seeding completed successfully!")
+    except Exception as e:
+        print(f"Error checking/seeding database on startup: {e}")
+    finally:
+        db.close()
+        
     yield
 
 
